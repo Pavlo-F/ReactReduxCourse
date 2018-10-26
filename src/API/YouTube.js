@@ -1,27 +1,25 @@
 import key from './key'
 
-let photos = [];
-
 export default class YouTube {
-    getPhotos() {
-        return photos;
-    }
 
     fetchData() {
 
-        photos = [];
         var url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&playlistId=LLOynRdpGiTCNFhCgD0RTe1w&key=${key}`;
 
         return fetch(url).then(function (response) {
             return response.json().then(function (json) {
 
-                for (let i = 0; i < json.items.length; i++) {
-                    let videoId = json.items[i].contentDetails.videoId;
-                    let statUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id=${videoId}&key=${key}`;
+                const promises = [];
 
-                    YouTube.fetchStatistic(statUrl);
+                for (let i = 0; i < json.items.length; i++) {
+                    const videoId = json.items[i].contentDetails.videoId;
+                    const statUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id=${videoId}&key=${key}`;
+
+                    promises.push(YouTube.getVideoInfo(statUrl));
 
                 }
+
+                return Promise.all(promises).then(() => promises);
 
             });
         });
@@ -29,18 +27,17 @@ export default class YouTube {
 
 
 
-    static fetchStatistic(yUrl) {
-    fetch(yUrl)
+    static getVideoInfo(yUrl) {
+    return fetch(yUrl)
         .then(response => response.json())
         .then(function (response) {
 
-            let item = response.items[0];
-
-            let likes = {};
+            const item = response.items[0];
+            const date = new Date();
+            const likes = {};
             likes.count = item.statistics.likeCount;
-            let date = new Date();
 
-            photos.push({ url: item.snippet.thumbnails.high.url, likes, date, id: item.id });
+            return { url: item.snippet.thumbnails.high.url, likes, date, id: item.id };
 
         })
         .catch(function (error) {

@@ -5,17 +5,19 @@ export const GET_PHOTOS_FAIL = 'GET_PHOTOS_FAIL'
 //eslint-disable-next-line
 import YouTube from '../API/YouTube'
 
-let photosArr = []
 
-function makeYearPhotos(photos, selectedYear) {
+function makeYearPhotos(data, selectedYear) {
     let createdYear,
         yearPhotos = []
 
-    photos.forEach(item => {
-        createdYear = item.date.getFullYear();
-        if (createdYear === selectedYear) {
-            yearPhotos.push(item)
-        }
+    data.forEach(item => {
+
+        item.then(function (res) {
+            createdYear = res.date.getFullYear();
+            if (createdYear === selectedYear) {
+                yearPhotos.push(res)
+            }
+        });
     })
 
     yearPhotos.sort((a, b) => b.likes.count - a.likes.count)
@@ -33,19 +35,13 @@ export function getPhotos(year) {
 
         var youTube = new YouTube();
 
-        youTube.fetchData().then(function () {
+        youTube.fetchData().then(function (data) {
+            const photos = makeYearPhotos(data, year);
 
-            setTimeout(function () { // костыль
-                var photos = youTube.getPhotos();
-
-                photosArr = makeYearPhotos(photos, year);
-
-
-                dispatch({
-                    type: GET_PHOTOS_SUCCESS,
-                    payload: photosArr,
-                })
-            }, 2000);
+            dispatch({
+                type: GET_PHOTOS_SUCCESS,
+                payload: photos,
+            })
 
         });
     }
