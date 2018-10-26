@@ -8,23 +8,11 @@ export function handleLogin() {
             type: LOGIN_REQUEST,
         })
 
-        VK.Auth.login(r => {
-            if (r.session) {
-                let username = r.session.user.first_name
 
-                dispatch({
-                    type: LOGIN_SUCCESS,
-                    payload: username,
-                })
-            } else {
-                dispatch({
-                    type: LOGIN_FAIL,
-                    error: true,
-                    payload: new Error('Ошибка авторизации'),
-                })
-            }
-        }, 4) // запрос прав на доступ к photo
-
+        dispatch({
+            type: LOGIN_SUCCESS,
+            payload: 'username',
+        })
 
     }
 }

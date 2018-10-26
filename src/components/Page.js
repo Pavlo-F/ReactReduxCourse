@@ -18,9 +18,7 @@ export class Page extends React.Component {
         } else {
             return photos.map(entry => (
                 <div key={entry.id} className="photo">
-                    <p>
-                        <img src={entry.sizes[0].url} alt="" />
-                    </p>
+                        <img src={entry.url} alt="" width="50%" />
                     <p>{entry.likes.count} ❤</p>
                 </div>
             ))
