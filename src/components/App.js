@@ -12,7 +12,7 @@ export default class App extends Component {
                 </header>
 
                 <PageContainer />
-                <UserContainer />
+         
             </div>
         )
     }

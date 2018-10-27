@@ -1,8 +1,8 @@
 import key from './key'
 
-export function fetchData() {
+export function fetchData(playListId) {
 
-    var url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&playlistId=LLOynRdpGiTCNFhCgD0RTe1w&key=${key}`;
+    var url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&playlistId=${playListId}&key=${key}`;
 
     return fetch(url).then(function (response) {
         return response.json().then(function (json) {

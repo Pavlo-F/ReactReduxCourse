@@ -5,7 +5,7 @@
 } from '../actions/PageActions'
 
 const initialState = {
-    year: 2018,
+    year: '',
     photos: [],
     isFetching: false,
     error: '',

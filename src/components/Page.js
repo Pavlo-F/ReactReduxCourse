@@ -3,8 +3,30 @@ import PropTypes from 'prop-types'
 
 export class Page extends React.Component {
     onBtnClick = e => {
-        const year = +e.currentTarget.innerText
-        this.props.getPhotos(year) // setYear -> getPhotos
+        const userName = e.currentTarget.innerText
+        let playListId = '';
+
+        switch(userName)
+        {
+            case 'SHIMOROSHOW':
+            {
+                playListId = 'LLOynRdpGiTCNFhCgD0RTe1w';
+                break;
+            }
+            case 'THEBRAINDIT':
+            {
+                playListId = 'LLFBcrywVNeUOqtJgGhPEvQg';
+                break;
+            }
+            case 'FOX86823':
+            {
+                playListId = 'LLz4KEygtdLIPNnryTeF7hog';
+                break;
+            }
+        }
+
+
+        this.props.getPhotos(playListId)
     }
     renderTemplate = () => {
         const { photos, isFetching, error } = this.props
@@ -31,23 +53,17 @@ export class Page extends React.Component {
             <div className="ib page">
                 <p>
                     <button className="btn" onClick={this.onBtnClick}>
-                        2018
+                    SHIMOROSHOW
                     </button>{' '}
                     <button className="btn" onClick={this.onBtnClick}>
-                        2017
+                        THEBRAINDIT
                     </button>{' '}
                     <button className="btn" onClick={this.onBtnClick}>
-                        2016
+                        FOX86823
                     </button>{' '}
-                    <button className="btn" onClick={this.onBtnClick}>
-                        2015
-                    </button>{' '}
-                    <button className="btn" onClick={this.onBtnClick}>
-                        2014
-                    </button>
                 </p>
                 <h3>
-                    {year} год [{photos.length}]
+                    Количество [{photos.length}]
                 </h3>
                 {this.renderTemplate()}
             </div>
