@@ -1,33 +1,29 @@
 import key from './key'
 
-export default class YouTube {
+export function fetchData() {
 
-    fetchData() {
+    var url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&playlistId=LLOynRdpGiTCNFhCgD0RTe1w&key=${key}`;
 
-        var url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&playlistId=LLOynRdpGiTCNFhCgD0RTe1w&key=${key}`;
+    return fetch(url).then(function (response) {
+        return response.json().then(function (json) {
 
-        return fetch(url).then(function (response) {
-            return response.json().then(function (json) {
+            const promises = [];
 
-                const promises = [];
+            for (let i = 0; i < json.items.length; i++) {
+                const videoId = json.items[i].contentDetails.videoId;
+                const statUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id=${videoId}&key=${key}`;
 
-                for (let i = 0; i < json.items.length; i++) {
-                    const videoId = json.items[i].contentDetails.videoId;
-                    const statUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id=${videoId}&key=${key}`;
+                promises.push(getVideoInfo(statUrl));
+            }
 
-                    promises.push(YouTube.getVideoInfo(statUrl));
-
-                }
-
-                return Promise.all(promises).then(() => promises);
-
-            });
+            return Promise.all(promises).then((result) => result);
         });
-    }
+    });
+}
 
 
 
-    static getVideoInfo(yUrl) {
+function getVideoInfo(yUrl) {
     return fetch(yUrl)
         .then(response => response.json())
         .then(function (response) {
@@ -43,6 +39,6 @@ export default class YouTube {
         .catch(function (error) {
             console.log(error);
         });
-    }
-
 }
+
+
